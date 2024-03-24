@@ -2,6 +2,8 @@ const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const bangumiData = require("bangumi-data");
+const axios = require("axios");
 
 const app = express();
 
@@ -58,6 +60,26 @@ app.get("/students", (req, res) => {
       res.json(results);
     }
   });
+});
+
+// 获取学生列表
+app.get("/animes", (req, res) => {
+  const animeData = bangumiData.items;
+  // 将animeData作为JSON数据发送给客户端
+  res.json(animeData);
+});
+
+app.get("/seasons", (req, res) => {
+  axios
+    .get("https://api.anime-data.com/seasons")
+    .then((response) => {
+      const responseData = response.data;
+      res.json(responseData);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ error: "Failed to fetch anime seasons data" });
+    });
 });
 
 // 新增学生
